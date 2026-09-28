@@ -45,6 +45,7 @@ export function SequenceScrubber({
 	return (
 		<div
 			ref={triggerRef}
+			data-sequence-track
 			className="relative h-(--sequence-length) motion-reduce:h-svh"
 			style={{ '--sequence-length': `${length}svh` } as CSSProperties}
 		>

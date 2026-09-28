@@ -48,6 +48,17 @@ names in English.
   `autoRound: false` or GSAP rounds 0.x px to 0.
 - Driver telemetry opens on mouse hover or a tap on the button; the closed panel is `inert`.
 
+## Overlays locked to a sequence
+
+- `lib/sequence/track-trigger.ts` builds a ScrollTrigger over the enclosing `[data-sequence-track]`,
+  so an overlay reads the same progress as the canvas.
+- Hotspots (`lib/machine/hotspots.ts`) were measured on the current turntable video (frame numbers
+  and source-frame fractions). Re-generating that video means re-measuring them.
+- Race HUD speed comes from scroll velocity (`lib/race/gearbox.ts`), ticking on GSAP's ticker only
+  while the race track is active.
+- Tailwind v4 `scale-*` / `translate-*` classes set the separate `scale` / `translate` properties —
+  never put them on an element GSAP animates via `transform`; set the start value inline instead.
+
 ## Finish / signup
 
 - Finish is a static image (`src/assets/finish/`) plus a signup form — no sequence.

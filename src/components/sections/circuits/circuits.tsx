@@ -63,7 +63,8 @@ export function Circuits() {
 							<span className="relative h-px w-24 bg-text/20 md:w-40">
 								<span
 									data-reel-progress
-									className="absolute inset-0 origin-left scale-x-0 bg-accent"
+									style={{ transform: 'scaleX(0)' }}
+									className="absolute inset-0 origin-left bg-accent"
 								/>
 							</span>
 						</div>

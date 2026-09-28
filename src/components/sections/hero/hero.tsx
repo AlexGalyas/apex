@@ -1,5 +1,7 @@
 import { ImageSequence } from '@/components/sequence'
 
+import { HeroTitle } from './hero-title'
+
 export function Hero() {
 	return (
 		<section id="garage" aria-label="Garage">
@@ -12,9 +14,7 @@ export function Hero() {
 				priority
 			>
 				<div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-					<h1 className="font-display text-[clamp(4rem,16vw,14rem)] leading-none font-black tracking-[0.2em]">
-						APEX
-					</h1>
+					<HeroTitle />
 					<p className="font-mono text-sm tracking-[0.4em] text-muted uppercase">
 						The night belongs to us
 					</p>
