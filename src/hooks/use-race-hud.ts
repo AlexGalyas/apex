@@ -3,13 +3,10 @@
 import type { RefObject } from 'react'
 
 import { gsap, useGSAP } from '@/lib/gsap'
-import { gearFor, rpmRatio, speedFromVelocity, TOP_SPEED } from '@/lib/race/gearbox'
+import { TOP_SPEED } from '@/lib/race/gearbox'
+import { createScrollSpeed } from '@/lib/race/scroll-speed'
 import { trackTrigger } from '@/lib/sequence/track-trigger'
 
-// Throttle bites fast, lift-off coasts down slowly.
-const ACCELERATE = 0.14
-const COAST = 0.035
-const VELOCITY_SMOOTHING = 0.25
 const SHIFT_LIGHT_AT = 0.9
 
 /**
@@ -31,24 +28,10 @@ export function useRaceHud(hudRef: RefObject<HTMLElement | null>) {
 				const arcEl = hud.querySelector<SVGPathElement>('[data-hud-arc]')
 				const rpmEl = hud.querySelector<HTMLElement>('[data-hud-rpm]')
 
-				let lastY = window.scrollY
-				let lastTime = performance.now()
-				let velocity = 0
-				let speed = 0
-				let gear = 0
+				const meter = createScrollSpeed(performance.now(), window.scrollY)
 
 				const tick = () => {
-					const now = performance.now()
-					const dt = Math.max(1, now - lastTime) / 1000
-					const y = window.scrollY
-					velocity += ((y - lastY) / dt - velocity) * VELOCITY_SMOOTHING
-					lastY = y
-					lastTime = now
-
-					const target = speedFromVelocity(velocity)
-					speed += (target - speed) * (target > speed ? ACCELERATE : COAST)
-					gear = gearFor(speed, gear)
-					const rpm = rpmRatio(speed, gear)
+					const { speed, gear, rpm } = meter.sample(performance.now(), window.scrollY)
 
 					if (speedEl) speedEl.textContent = String(Math.round(speed)).padStart(3, '0')
 					if (gearEl) gearEl.textContent = gear === 0 ? 'N' : String(gear)
@@ -61,8 +44,7 @@ export function useRaceHud(hudRef: RefObject<HTMLElement | null>) {
 				}
 
 				const start = () => {
-					lastY = window.scrollY
-					lastTime = performance.now()
+					meter.reset(performance.now(), window.scrollY)
 					gsap.ticker.add(tick)
 				}
 				const stop = () => gsap.ticker.remove(tick)

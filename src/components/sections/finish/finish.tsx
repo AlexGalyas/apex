@@ -10,6 +10,7 @@ export function Finish() {
 	return (
 		<section
 			id="finish"
+			data-rain="0.85"
 			aria-labelledby="finish-title"
 			className="relative isolate flex min-h-svh flex-col overflow-hidden lg:flex-row lg:items-center"
 		>
@@ -27,21 +28,29 @@ export function Finish() {
 			/>
 
 			<div className="flex flex-1 flex-col justify-end gap-8 px-6 pt-[45svh] pb-10 md:px-16 lg:justify-center lg:pt-0 lg:pb-0">
-				<p className="font-mono text-xs tracking-[0.4em] text-accent uppercase">
+				<p data-reveal className="font-mono text-xs tracking-[0.4em] text-accent uppercase">
 					{NEXT_RACE.title}
 				</p>
 				<h2
 					id="finish-title"
+					data-reveal
+					data-reveal-delay="0.1"
 					className="font-display text-5xl leading-none font-black md:text-7xl"
 				>
 					Next race:
 					<br />
 					{NEXT_RACE.city}
 				</h2>
-				<Countdown target={NEXT_RACE.startsAt} />
+				<div data-reveal data-reveal-delay="0.2">
+					<Countdown target={NEXT_RACE.startsAt} />
+				</div>
 			</div>
 
-			<div className="w-full px-6 pb-16 md:px-16 lg:w-[480px] lg:shrink-0 lg:pr-16 lg:pb-0 lg:pl-0">
+			<div
+				data-reveal
+				data-reveal-delay="0.3"
+				className="w-full px-6 pb-16 md:px-16 lg:w-[480px] lg:shrink-0 lg:pr-16 lg:pb-0 lg:pl-0"
+			>
 				<SignupForm />
 			</div>
 		</section>

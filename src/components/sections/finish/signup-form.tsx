@@ -44,7 +44,7 @@ export function SignupForm() {
 	const submitting = phase.kind === 'submitting'
 
 	return (
-		<div className="relative border border-accent/30 bg-bg/70 p-6 backdrop-blur-md md:p-10">
+		<div className="relative border border-accent/30 bg-bg/70 scanlines p-6 backdrop-blur-md md:p-10">
 			<p className="font-mono text-xs tracking-[0.3em] text-accent uppercase">
 				Last race of the season
 			</p>
@@ -123,7 +123,7 @@ export function SignupForm() {
 					<button
 						type="submit"
 						disabled={submitting}
-						className="mt-2 bg-accent px-6 py-4 font-display text-sm font-bold tracking-[0.2em] text-bg uppercase transition-opacity duration-(--apex-duration-fast) hover:opacity-90 disabled:opacity-50"
+						className="relative mt-2 overflow-hidden bg-accent px-6 py-4 font-display text-sm font-bold tracking-[0.2em] text-bg uppercase transition-opacity duration-(--apex-duration-fast) before:absolute before:inset-y-0 before:-left-1/2 before:w-1/3 before:-skew-x-12 before:bg-white/35 before:transition-transform before:duration-(--apex-duration-slow) hover:opacity-90 hover:before:translate-x-[450%] disabled:opacity-50 motion-reduce:before:hidden"
 					>
 						{submitting ? 'Locking in…' : 'Join the grid'}
 					</button>

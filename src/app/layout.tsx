@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 
+import { Grain, Rain, Reveals, SoundToggle } from '@/components/fx'
 import { SmoothScroll } from '@/components/providers/smooth-scroll'
 import { jetbrainsMono, unbounded } from '@/core/fonts'
 
@@ -21,6 +22,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
 			<body className="bg-bg text-text">
 				<SmoothScroll />
 				{children}
+				<Rain />
+				<Grain />
+				<SoundToggle />
+				<Reveals />
 			</body>
 		</html>
 	)

@@ -5,7 +5,7 @@ import { DriverCard } from './driver-card'
 
 export function Drivers() {
 	return (
-		<section id="drivers" aria-labelledby="drivers-title">
+		<section id="drivers" data-rain="0.2" aria-labelledby="drivers-title">
 			<Stage className="flex flex-col gap-4 bg-bg px-4 pt-20 pb-4 md:gap-8 md:px-16 md:pt-24 md:pb-12">
 				<header className="flex items-end justify-between gap-6">
 					<h2 id="drivers-title" className="font-display text-3xl font-bold md:text-6xl">

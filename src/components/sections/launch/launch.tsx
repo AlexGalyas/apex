@@ -2,7 +2,7 @@ import { ImageSequence } from '@/components/sequence'
 
 export function Launch() {
 	return (
-		<section id="launch" aria-labelledby="launch-title">
+		<section id="launch" data-rain="0.7" aria-labelledby="launch-title">
 			<ImageSequence
 				scene="launch"
 				label="The car rolls out of the garage onto a wet neon street"

@@ -18,6 +18,16 @@
 	--ease-apex: var(--apex-ease-out);
 
 	--animate-ecg: ecg 2.4s linear infinite;
+	--animate-eq: eq 0.8s ease-in-out infinite alternate;
+
+	@keyframes eq {
+		from {
+			transform: scaleY(0.25);
+		}
+		to {
+			transform: scaleY(1);
+		}
+	}
 
 	@keyframes ecg {
 		to {
@@ -41,4 +51,46 @@ body {
 ::selection {
 	background: var(--apex-accent);
 	color: var(--apex-bg);
+}
+
+/* Grain texture: SVG turbulence, desaturated, tiled; jittered in steps so it reads as film, not video noise. */
+.grain {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	animation: grain 0.9s steps(6) infinite;
+	will-change: transform;
+}
+
+@keyframes grain {
+	0% {
+		transform: translate(0, 0);
+	}
+	20% {
+		transform: translate(-3%, 2%);
+	}
+	40% {
+		transform: translate(2%, -4%);
+	}
+	60% {
+		transform: translate(-4%, -1%);
+	}
+	80% {
+		transform: translate(3%, 3%);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.grain {
+		animation: none;
+	}
+}
+
+@utility scanlines {
+	background-image: repeating-linear-gradient(
+		to bottom,
+		transparent 0 2px,
+		var(--apex-scanline) 2px 3px
+	);
 }

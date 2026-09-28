@@ -23,6 +23,7 @@ export function Circuits() {
 		<section
 			ref={sectionRef}
 			id="circuits"
+			data-rain="0.85"
 			aria-labelledby="circuits-title"
 			data-accent={ACCENTS[0]}
 			className="accent-transition"

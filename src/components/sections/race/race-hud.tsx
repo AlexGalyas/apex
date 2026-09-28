@@ -85,7 +85,7 @@ export function RaceHud() {
 					<span className="text-[10px] tracking-[0.3em] text-muted uppercase">Gear</span>
 					<span
 						data-hud-gear
-						className="flex size-12 items-center justify-center border border-accent text-3xl text-accent md:size-16 md:text-4xl"
+						className="flex size-12 items-center justify-center border border-accent scanlines text-3xl text-accent md:size-16 md:text-4xl"
 					>
 						N
 					</span>

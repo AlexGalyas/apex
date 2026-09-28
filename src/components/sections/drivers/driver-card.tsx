@@ -69,10 +69,7 @@ export function DriverCard({ driver }: { driver: Driver }) {
 				inert={!active}
 				className="pointer-events-none absolute inset-0 flex flex-col justify-end gap-5 bg-bg/85 p-5 opacity-0 backdrop-blur-sm transition-opacity duration-(--apex-duration-base) group-data-[active=true]:pointer-events-auto group-data-[active=true]:opacity-100 md:p-8"
 			>
-				<div
-					aria-hidden
-					className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(to_bottom,transparent_0_2px,rgb(255_255_255/0.03)_2px_3px)]"
-				/>
+				<div aria-hidden className="pointer-events-none absolute inset-0 scanlines" />
 				<p className="font-mono text-[10px] tracking-[0.4em] text-accent uppercase md:text-xs">
 					Live telemetry · {driver.name}
 				</p>

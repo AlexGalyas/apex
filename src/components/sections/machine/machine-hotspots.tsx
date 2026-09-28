@@ -53,7 +53,7 @@ export function MachineHotspots() {
 						key={hotspot.id}
 						data-hotspot-card
 						style={{ display: 'none' }}
-						className="flex h-20 items-center gap-4 border-l-2 border-accent bg-bg/70 px-4 font-mono opacity-0 backdrop-blur-sm"
+						className="flex h-20 items-center gap-4 border-l-2 border-accent bg-bg/70 scanlines px-4 font-mono opacity-0 backdrop-blur-sm"
 					>
 						<span className="text-3xl text-text tabular-nums">
 							<span data-hotspot-value={hotspot.id}>0</span>

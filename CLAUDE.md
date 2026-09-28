@@ -59,6 +59,16 @@ names in English.
 - Tailwind v4 `scale-*` / `translate-*` classes set the separate `scale` / `translate` properties —
   never put them on an element GSAP animates via `transform`; set the start value inline instead.
 
+## Atmosphere (`components/fx`, mounted once in the layout)
+
+- Rain: raw WebGL, one fragment shader (`lib/rain/shaders.ts`), rendered at 0.4–0.5 of CSS
+  pixels. Each section sets `data-rain` (0..1); the shader eases between them and goes idle at 0.
+- Grain: CSS-only tiled SVG noise, jittered with `steps()`. No blend modes (they force expensive
+  compositing over the scrubbed canvases).
+- Engine sound: Web Audio synth (`lib/audio/engine-synth.ts`), off by default, created on the first
+  click. It shares `lib/race/scroll-speed.ts` with the race HUD so sound and dial agree.
+- `data-reveal` (+ `data-reveal-delay`) = rise-in on first view; `scanlines` is a Tailwind utility.
+
 ## Finish / signup
 
 - Finish is a static image (`src/assets/finish/`) plus a signup form — no sequence.

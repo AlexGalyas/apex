@@ -4,7 +4,7 @@ import { RaceHud } from './race-hud'
 
 export function Race() {
 	return (
-		<section id="race" aria-labelledby="race-title">
+		<section id="race" data-rain="0.35" aria-labelledby="race-title">
 			<ImageSequence
 				scene="race"
 				label="Chase camera flying through a neon tunnel at extreme speed"

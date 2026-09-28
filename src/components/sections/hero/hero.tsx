@@ -4,7 +4,7 @@ import { HeroTitle } from './hero-title'
 
 export function Hero() {
 	return (
-		<section id="garage" aria-label="Garage">
+		<section id="garage" data-rain="0.12" aria-label="Garage">
 			<ImageSequence
 				scene="garage"
 				label="Lights switch on one by one over the APEX car in a dark garage"

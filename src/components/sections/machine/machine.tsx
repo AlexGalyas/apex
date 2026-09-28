@@ -4,7 +4,7 @@ import { MachineHotspots } from './machine-hotspots'
 
 export function Machine() {
 	return (
-		<section id="machine" aria-labelledby="machine-title">
+		<section id="machine" data-rain="0.45" aria-labelledby="machine-title">
 			<ImageSequence
 				scene="turntable"
 				label="The car rotates a full 360 degrees"
