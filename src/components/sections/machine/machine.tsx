@@ -1,7 +1,23 @@
+import { type Beat, SceneBeats } from '@/components/scene'
 import { ImageSequence } from '@/components/sequence'
 import { TURNTABLE_HOLD } from '@/lib/machine/hotspots'
 
 import { MachineHotspots } from './machine-hotspots'
+
+// Scroll progress: the callouts run from ~0.03 to 0.6, the profile holds from 0.7.
+const BEATS: Beat[] = [
+	{
+		from: 0,
+		to: 0.22,
+		eyebrow: 'Chassis 07',
+		text: 'Built, not bought. An S-chassis shell, fourteen months in the garage, every panel hand-fitted.'
+	},
+	{
+		from: 0.62,
+		to: 1,
+		text: 'One car, one driver, one night a month.'
+	}
+]
 
 export function Machine() {
 	return (
@@ -13,11 +29,16 @@ export function Machine() {
 				hold={TURNTABLE_HOLD}
 			>
 				<MachineHotspots />
-				<div className="absolute inset-x-0 top-16 px-6 md:px-16">
+				{/* The car never rises above its roofline; phones keep the bottom for spec cards. */}
+				<SceneBeats
+					beats={BEATS}
+					className="inset-x-6 top-16 md:right-auto md:left-16"
+					scrimClassName="top-0 h-2/5 bg-linear-to-b"
+				>
 					<h2 id="machine-title" className="font-display text-4xl font-bold md:text-6xl">
 						The Machine
 					</h2>
-				</div>
+				</SceneBeats>
 			</ImageSequence>
 		</section>
 	)
