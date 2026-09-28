@@ -37,15 +37,6 @@ export function Circuits() {
 					data-stage
 					className="sticky top-0 h-svh overflow-hidden bg-bg will-change-transform motion-reduce:static motion-reduce:h-auto"
 				>
-					<div
-						ref={trackRef}
-						className="relative h-full motion-reduce:flex motion-reduce:w-full motion-reduce:flex-col md:flex md:w-max"
-					>
-						{CIRCUITS.map((circuit, index) => (
-							<CircuitPanel key={circuit.id} circuit={circuit} first={index === 0} />
-						))}
-					</div>
-
 					<header className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-6 px-6 pt-8 motion-reduce:hidden md:px-16 md:pt-12">
 						<h2
 							id="circuits-title"
@@ -70,6 +61,15 @@ export function Circuits() {
 							</span>
 						</div>
 					</header>
+
+					<div
+						ref={trackRef}
+						className="relative h-full motion-reduce:flex motion-reduce:w-full motion-reduce:flex-col md:flex md:w-max"
+					>
+						{CIRCUITS.map((circuit, index) => (
+							<CircuitPanel key={circuit.id} circuit={circuit} first={index === 0} />
+						))}
+					</div>
 
 					<StageDim />
 				</div>

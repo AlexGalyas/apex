@@ -21,7 +21,8 @@ export function HeroTitle() {
 					key={index}
 					data-letter
 					aria-hidden
-					className="inline-block px-[0.1em] will-change-transform"
+					className="inline-block animate-rise px-[0.1em] will-change-transform motion-reduce:animate-none"
+					style={{ animationDelay: `${200 + index * 80}ms` }}
 				>
 					{letter}
 				</span>

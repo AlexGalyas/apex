@@ -18,6 +18,14 @@
 	--ease-apex: var(--apex-ease-out);
 
 	--animate-ecg: ecg 2.4s linear infinite;
+	/* `translate`, not `transform`: GSAP owns the letters' transform for the scroll spread. */
+	--animate-rise: rise 1.2s var(--apex-ease-out) backwards;
+
+	@keyframes rise {
+		from {
+			translate: 0 110%;
+		}
+	}
 
 	@keyframes ecg {
 		to {

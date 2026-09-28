@@ -20,7 +20,8 @@ import type { SequenceManifest } from '@/lib/sequence/types'
 import { useReducedMotion } from './use-reduced-motion'
 
 const MAX_PIXEL_RATIO = 2
-const PRELOAD_MARGIN = '150% 0px'
+// Scenes overlap (see scene-enter), so a wide margin would preload the next scene on page load.
+const PRELOAD_MARGIN = '50% 0px'
 
 interface Options {
 	manifest: SequenceManifest

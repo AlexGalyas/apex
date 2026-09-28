@@ -9,8 +9,9 @@ import { trackTrigger } from '@/lib/sequence/track-trigger'
 const SPREAD = 0.11
 
 /**
- * Letters rise in on load, then drift apart from the centre as the garage
- * scene is scrubbed — the title "opens up" as the lights come on.
+ * Letters drift apart from the centre as the garage scene is scrubbed — the
+ * title "opens up" as the lights come on. The rise-in on load is CSS
+ * (`animate-rise`) so it starts with first paint instead of after hydration.
  */
 export function useSplitTitle(titleRef: RefObject<HTMLElement | null>) {
 	useGSAP(
@@ -22,15 +23,6 @@ export function useSplitTitle(titleRef: RefObject<HTMLElement | null>) {
 			mm.add('(prefers-reduced-motion: no-preference)', () => {
 				const letters = gsap.utils.toArray<HTMLElement>('[data-letter]', title)
 				const centre = (letters.length - 1) / 2
-
-				gsap.from(letters, {
-					yPercent: 110,
-					opacity: 0,
-					duration: 1.2,
-					ease: 'expo.out',
-					stagger: 0.08,
-					delay: 0.2
-				})
 
 				const spread = gsap.timeline({ defaults: { ease: 'power1.in' } })
 				letters.forEach((letter, index) => {

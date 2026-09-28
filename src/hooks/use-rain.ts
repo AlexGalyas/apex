@@ -3,6 +3,7 @@
 import type { RefObject } from 'react'
 
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap'
+import { whenIdle } from '@/lib/idle'
 import { approach } from '@/lib/rain/intensity'
 import { RainRenderer } from '@/lib/rain/rain-renderer'
 
@@ -14,7 +15,9 @@ const EASE_RATE = 0.03
 /**
  * Lens rain over the whole page. Each section says how hard it rains with
  * `data-rain` (0..1); the shader eases between them as sections take over.
- * Skipped entirely without WebGL or with reduced motion.
+ * Skipped entirely without WebGL or with reduced motion. Compiling the shader
+ * is synchronous, so it waits until the page is idle instead of blocking
+ * hydration.
  */
 export function useRain(canvasRef: RefObject<HTMLCanvasElement | null>) {
 	useGSAP(() => {
@@ -23,58 +26,70 @@ export function useRain(canvasRef: RefObject<HTMLCanvasElement | null>) {
 
 		const mm = gsap.matchMedia()
 		mm.add('(prefers-reduced-motion: no-preference)', () => {
-			let renderer: RainRenderer
-			try {
-				renderer = new RainRenderer(canvas)
-			} catch (error) {
-				console.warn('[rain] disabled', error)
-				return
-			}
-
-			const resize = () => {
-				const compact = window.innerWidth < 768
-				const scale =
-					(compact ? RENDER_SCALE_COMPACT : RENDER_SCALE) *
-					Math.min(window.devicePixelRatio || 1, 2)
-				renderer.resize(window.innerWidth * scale, window.innerHeight * scale)
-			}
-			resize()
-			window.addEventListener('resize', resize)
-
-			let current = 0
-			let target = 0
-			let idle = false
-
-			const zones = gsap.utils.toArray<HTMLElement>('[data-rain]').map((zone) =>
-				ScrollTrigger.create({
-					trigger: zone,
-					start: 'top 60%',
-					end: 'bottom 40%',
-					onToggle: (self) => {
-						if (self.isActive) target = Number(zone.dataset.rain) || 0
-					}
-				})
-			)
-			const active = zones.find((zone) => zone.isActive)
-			if (active) target = Number((active.trigger as HTMLElement).dataset.rain) || 0
-
-			const tick = (time: number) => {
-				current = approach(current, target, EASE_RATE)
-				if (current === 0 && target === 0) {
-					if (!idle) renderer.clear()
-					idle = true
-					return
-				}
-				idle = false
-				renderer.render(time, current)
-			}
-			gsap.ticker.add(tick)
-
+			let teardown = () => {}
+			const cancel = whenIdle(() => {
+				teardown = startRain(canvas)
+			})
 			return () => {
-				gsap.ticker.remove(tick)
-				window.removeEventListener('resize', resize)
-				renderer.dispose()
+				cancel()
+				teardown()
 			}
 		})
 	})
+}
+
+function startRain(canvas: HTMLCanvasElement): () => void {
+	let renderer: RainRenderer
+	try {
+		renderer = new RainRenderer(canvas)
+	} catch (error) {
+		console.warn('[rain] disabled', error)
+		return () => {}
+	}
+
+	const resize = () => {
+		const compact = window.innerWidth < 768
+		const scale =
+			(compact ? RENDER_SCALE_COMPACT : RENDER_SCALE) *
+			Math.min(window.devicePixelRatio || 1, 2)
+		renderer.resize(window.innerWidth * scale, window.innerHeight * scale)
+	}
+	resize()
+	window.addEventListener('resize', resize)
+
+	let current = 0
+	let target = 0
+	let idle = false
+
+	const zones = gsap.utils.toArray<HTMLElement>('[data-rain]').map((zone) =>
+		ScrollTrigger.create({
+			trigger: zone,
+			start: 'top 60%',
+			end: 'bottom 40%',
+			onToggle: (self) => {
+				if (self.isActive) target = Number(zone.dataset.rain) || 0
+			}
+		})
+	)
+	const active = zones.find((zone) => zone.isActive)
+	if (active) target = Number((active.trigger as HTMLElement).dataset.rain) || 0
+
+	const tick = (time: number) => {
+		current = approach(current, target, EASE_RATE)
+		if (current === 0 && target === 0) {
+			if (!idle) renderer.clear()
+			idle = true
+			return
+		}
+		idle = false
+		renderer.render(time, current)
+	}
+	gsap.ticker.add(tick)
+
+	return () => {
+		gsap.ticker.remove(tick)
+		window.removeEventListener('resize', resize)
+		zones.forEach((zone) => zone.kill())
+		renderer.dispose()
+	}
 }
