@@ -5,6 +5,8 @@ const PORT = 3200
 export default defineConfig({
 	testDir: './tests/e2e',
 	fullyParallel: true,
+	// Each worker runs a Chrome with WebGL and hundreds of frames; more than a few starve each other.
+	workers: 3,
 	reporter: 'list',
 	use: {
 		baseURL: `http://localhost:${PORT}`,

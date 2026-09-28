@@ -19,6 +19,23 @@
 
 	--animate-ecg: ecg 2.4s linear infinite;
 	--animate-rise: rise 1.2s var(--apex-ease-out) backwards;
+	--animate-cue: cue 2.2s var(--apex-ease-out) infinite;
+	--animate-nudge: nudge 1.4s ease-in-out infinite;
+
+	@keyframes cue {
+		from {
+			translate: 0 -100%;
+		}
+		to {
+			translate: 0 300%;
+		}
+	}
+
+	@keyframes nudge {
+		50% {
+			translate: 0 3px;
+		}
+	}
 
 	@keyframes rise {
 		from {
@@ -90,4 +107,27 @@ body {
 		transparent 0 2px,
 		var(--apex-scanline) 2px 3px
 	);
+}
+
+/* Barely-there scrollbar: a hairline thumb that only warms to the accent on hover. */
+html {
+	scrollbar-width: thin;
+	scrollbar-color: var(--apex-scrollbar) transparent;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--apex-scrollbar);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--apex-accent);
 }

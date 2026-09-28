@@ -49,3 +49,24 @@ test('driver telemetry opens from its button', async ({ page }) => {
 	await expect(toggle).toHaveAttribute('aria-expanded', 'true')
 	await expect(card.getByText('Live telemetry · Kai Mori')).toBeVisible()
 })
+
+test('side rail jumps to a scene and marks it current', async ({ page }) => {
+	await page.goto('/')
+	const rail = page.getByRole('navigation', { name: 'Sections' })
+	await expect(rail.locator('[aria-current="step"]')).toHaveAccessibleName('01 Garage')
+
+	await rail.getByRole('button', { name: '06 Race' }).click()
+	await expect(rail.locator('[aria-current="step"]')).toHaveAccessibleName('06 Race', {
+		timeout: 5000
+	})
+	const title = page.getByRole('heading', { name: 'Race', exact: true })
+	await expect(title).toBeInViewport()
+	// Landed past the overlay fade-in, so the title is actually readable.
+	await expect
+		.poll(() =>
+			title.evaluate((el) =>
+				Number(getComputedStyle(el.closest('[style*="opacity"]')!).opacity)
+			)
+		)
+		.toBeGreaterThan(0.9)
+})

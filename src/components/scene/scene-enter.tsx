@@ -22,7 +22,7 @@ export function SceneEnter({ mode, children }: SceneEnterProps) {
 	useSceneEnter(wrapperRef, mode)
 
 	return (
-		<div ref={wrapperRef} className={`relative ${OVERLAP[mode]}`}>
+		<div ref={wrapperRef} data-enter={mode} className={`relative ${OVERLAP[mode]}`}>
 			{children}
 		</div>
 	)

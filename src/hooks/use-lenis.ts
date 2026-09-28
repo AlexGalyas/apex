@@ -4,6 +4,7 @@ import Lenis from 'lenis'
 import { useEffect } from 'react'
 
 import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { registerLenis } from '@/lib/scroll'
 
 import { useReducedMotion } from './use-reduced-motion'
 
@@ -21,9 +22,11 @@ export function useLenis() {
 		lenis.on('scroll', ScrollTrigger.update)
 		gsap.ticker.add(tick)
 		gsap.ticker.lagSmoothing(0)
+		registerLenis(lenis)
 
 		return () => {
 			gsap.ticker.remove(tick)
+			registerLenis(null)
 			lenis.destroy()
 		}
 	}, [reducedMotion])

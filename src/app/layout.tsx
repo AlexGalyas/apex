@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 
 import { Grain, Rain, Reveals } from '@/components/fx'
+import { ScrollGuide } from '@/components/navigation/scroll-guide'
 import { SmoothScroll } from '@/components/providers/smooth-scroll'
 import { config } from '@/core/config'
 import { jetbrainsMono, unbounded } from '@/core/fonts'
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
 				{children}
 				<Rain />
 				<Grain />
+				<ScrollGuide />
 				<Reveals />
 			</body>
 		</html>

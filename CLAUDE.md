@@ -67,6 +67,15 @@ names in English.
   compositing over the scrubbed canvases).
 - `data-reveal` (+ `data-reveal-delay`) = rise-in on first view; `scanlines` is a Tailwind utility.
 
+## Navigation & scroll cues
+
+- `components/navigation/scroll-guide.tsx`: right-hand rail (one tick per `NAV_SECTIONS` entry in
+  `lib/navigation/sections.ts`) + an idle "keep scrolling" nudge after 4 s. Adding a section means
+  adding it there too.
+- A section counts as current when it is actually visible (`sectionThreshold`), not when its top
+  crosses the viewport — scenes overlap. Jumps land past the overlay fade-in (`use-scroll-guide`).
+- Lenis is registered in `lib/scroll.ts` so anything can call `scrollToY`.
+
 ## Finish / signup
 
 - Finish is a static image (`src/assets/finish/`) plus a signup form — no sequence.
