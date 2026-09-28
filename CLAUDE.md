@@ -25,6 +25,20 @@ names in English.
   fps + quality) appended as `?v=` — never serve changed frames under an unchanged URL.
 - Lenis runs on GSAP's ticker (`use-lenis`); do not add a second rAF loop for scrolling.
 
+## Scene transitions
+
+- The choreography lives in `src/app/page.tsx`: every section after the first is wrapped in
+  `<SceneEnter mode>`.
+  - `continue` — for shots whose first frame is the previous last frame (garage → launch →
+    turntable): overlaps 120svh, stays hidden, then cross-fades while both are pinned.
+  - `curtain` — slides over the pinned previous stage, which scales to 0.92 and dims; the incoming
+    top edge is feathered with a mask.
+- A section can only be curtained over if it is pinned: sequences are; one-screen sections use
+  `<Stage>` (200svh wrapper, sticky inner, `data-stage` + `data-stage-dim`).
+- Overlay copy on sequences fades out over the last 15% (`lib/scene/fades.ts`) so nothing is cut
+  at a hand-over. Chained `continue` scenes must share the zoom at the seam (garage ends at 1.12,
+  launch starts at 1.12).
+
 ## Finish / signup
 
 - Finish is a static image (`src/assets/finish/`) plus a signup form — no sequence.

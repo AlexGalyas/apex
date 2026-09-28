@@ -2,6 +2,7 @@
 
 import { type CSSProperties, type ReactNode, useRef } from 'react'
 
+import { StageDim } from '@/components/scene/stage-dim'
 import { useImageSequence } from '@/hooks/use-image-sequence'
 import type { SequenceManifest } from '@/lib/sequence/types'
 
@@ -11,6 +12,7 @@ interface SequenceScrubberProps {
 	priority: boolean
 	label: string
 	zoom?: readonly [number, number]
+	overlayFromStart?: boolean
 	onProgress?: (progress: number) => void
 	children?: ReactNode
 }
@@ -21,13 +23,24 @@ export function SequenceScrubber({
 	priority,
 	label,
 	zoom,
+	overlayFromStart = false,
 	onProgress,
 	children
 }: SequenceScrubberProps) {
 	const triggerRef = useRef<HTMLDivElement>(null)
 	const canvasRef = useRef<HTMLCanvasElement>(null)
+	const overlayRef = useRef<HTMLDivElement>(null)
 
-	useImageSequence({ manifest, canvasRef, triggerRef, priority, zoom, onProgress })
+	useImageSequence({
+		manifest,
+		canvasRef,
+		triggerRef,
+		overlayRef,
+		overlayFromStart,
+		priority,
+		zoom,
+		onProgress
+	})
 
 	return (
 		<div
@@ -35,14 +48,21 @@ export function SequenceScrubber({
 			className="relative h-(--sequence-length) motion-reduce:h-svh"
 			style={{ '--sequence-length': `${length}svh` } as CSSProperties}
 		>
-			<div className="sticky top-0 h-svh overflow-hidden">
+			<div data-stage className="sticky top-0 h-svh overflow-hidden will-change-transform">
 				<canvas
 					ref={canvasRef}
 					role="img"
 					aria-label={label}
 					className="absolute inset-0 size-full bg-bg"
 				/>
-				{children}
+				<div
+					ref={overlayRef}
+					className="absolute inset-0 motion-reduce:opacity-100!"
+					style={{ opacity: overlayFromStart ? 1 : 0 }}
+				>
+					{children}
+				</div>
+				<StageDim />
 			</div>
 		</div>
 	)

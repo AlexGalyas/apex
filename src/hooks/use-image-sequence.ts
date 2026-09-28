@@ -3,6 +3,7 @@
 import { type RefObject, useEffect, useRef } from 'react'
 
 import { ScrollTrigger } from '@/lib/gsap'
+import { overlayOpacity } from '@/lib/scene/fades'
 import {
 	coverRect,
 	frameUrl,
@@ -25,6 +26,9 @@ interface Options {
 	manifest: SequenceManifest
 	canvasRef: RefObject<HTMLCanvasElement | null>
 	triggerRef: RefObject<HTMLElement | null>
+	overlayRef: RefObject<HTMLElement | null>
+	/** Overlay copy is visible from the first frame instead of fading in (the opening scene). */
+	overlayFromStart: boolean
 	priority: boolean
 	/** Canvas scale at the start and end of the scrub, e.g. [1, 1.12] for a push-in. */
 	zoom?: readonly [number, number]
@@ -35,6 +39,8 @@ export function useImageSequence({
 	manifest,
 	canvasRef,
 	triggerRef,
+	overlayRef,
+	overlayFromStart,
 	priority,
 	zoom,
 	onProgress
@@ -121,16 +127,22 @@ export function useImageSequence({
 		)
 		proximity.observe(trigger)
 
+		const overlay = overlayRef.current
+		const update = (progress: number) => {
+			target = progressToFrame(progress, frameCount)
+			if (overlay) overlay.style.opacity = String(overlayOpacity(progress, !overlayFromStart))
+			onProgressRef.current?.(progress)
+			scheduleDraw()
+		}
+
 		const scrub = ScrollTrigger.create({
 			trigger,
 			start: 'top top',
 			end: 'bottom bottom',
-			onUpdate: (self) => {
-				target = progressToFrame(self.progress, frameCount)
-				onProgressRef.current?.(self.progress)
-				scheduleDraw()
-			}
+			onUpdate: (self) => update(self.progress)
 		})
+		// A reload mid-page restores scroll without an update event — sync to it once.
+		update(scrub.progress)
 
 		return () => {
 			scrub.kill()
@@ -139,5 +151,15 @@ export function useImageSequence({
 			cancelAnimationFrame(rafId)
 			store.dispose()
 		}
-	}, [manifest, canvasRef, triggerRef, priority, zoomFrom, zoomTo, reducedMotion])
+	}, [
+		manifest,
+		canvasRef,
+		triggerRef,
+		overlayRef,
+		overlayFromStart,
+		priority,
+		zoomFrom,
+		zoomTo,
+		reducedMotion
+	])
 }

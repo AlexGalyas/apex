@@ -1,3 +1,4 @@
+import { SceneEnter } from '@/components/scene'
 import { Circuits } from '@/components/sections/circuits'
 import { Drivers } from '@/components/sections/drivers'
 import { Finish } from '@/components/sections/finish'
@@ -10,12 +11,24 @@ export default function HomePage() {
 	return (
 		<main>
 			<Hero />
-			<Launch />
-			<Machine />
-			<Circuits />
-			<Drivers />
-			<Race />
-			<Finish />
+			<SceneEnter mode="continue">
+				<Launch />
+			</SceneEnter>
+			<SceneEnter mode="continue">
+				<Machine />
+			</SceneEnter>
+			<SceneEnter mode="curtain">
+				<Circuits />
+			</SceneEnter>
+			<SceneEnter mode="curtain">
+				<Drivers />
+			</SceneEnter>
+			<SceneEnter mode="curtain">
+				<Race />
+			</SceneEnter>
+			<SceneEnter mode="curtain">
+				<Finish />
+			</SceneEnter>
 		</main>
 	)
 }
