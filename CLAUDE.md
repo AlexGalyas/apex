@@ -39,6 +39,15 @@ names in English.
   at a hand-over. Chained `continue` scenes must share the zoom at the seam (garage ends at 1.12,
   launch starts at 1.12).
 
+## Circuits / Drivers
+
+- Circuits is a pinned reel (`use-circuits-reel`): draw → slide → draw…, ranges in
+  `lib/circuits/reel.ts`. Desktop slides sideways, mobile stacks cards sliding up. The section
+  accent is `data-accent`, and `--apex-accent` is a registered `@property`, so it transitions.
+- Tracks are invented SVG paths with `pathLength=1`; tween `strokeDashoffset` with
+  `autoRound: false` or GSAP rounds 0.x px to 0.
+- Driver telemetry opens on mouse hover or a tap on the button; the closed panel is `inert`.
+
 ## Finish / signup
 
 - Finish is a static image (`src/assets/finish/`) plus a signup form — no sequence.

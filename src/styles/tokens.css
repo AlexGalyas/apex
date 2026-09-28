@@ -13,4 +13,28 @@
 	--apex-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 	--apex-duration-fast: 150ms;
 	--apex-duration-base: 300ms;
+	--apex-duration-slow: 700ms;
+}
+
+/* Registered so the accent can transition between cities instead of snapping. */
+@property --apex-accent {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: #00e5ff;
+}
+
+[data-accent='magenta'] {
+	--apex-accent: var(--apex-magenta);
+}
+
+[data-accent='cyan'] {
+	--apex-accent: var(--apex-cyan);
+}
+
+[data-accent='gold'] {
+	--apex-accent: var(--apex-gold);
+}
+
+.accent-transition {
+	transition: --apex-accent var(--apex-duration-slow) var(--apex-ease-out);
 }

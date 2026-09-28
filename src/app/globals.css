@@ -16,6 +16,14 @@
 	--font-mono: var(--font-jetbrains-mono);
 
 	--ease-apex: var(--apex-ease-out);
+
+	--animate-ecg: ecg 2.4s linear infinite;
+
+	@keyframes ecg {
+		to {
+			transform: translateX(-50%);
+		}
+	}
 }
 
 html {
