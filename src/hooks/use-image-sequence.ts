@@ -92,6 +92,8 @@ export function useImageSequence({
 			)
 			const scale = lerp(zoomFrom, zoomTo, index / Math.max(1, last))
 			const rect = scaleRect(cover, canvas.width, canvas.height, scale)
+			// Resizing a canvas resets its context state, so this is set on every draw.
+			context.imageSmoothingQuality = 'high'
 			context.drawImage(image, rect.x, rect.y, rect.width, rect.height)
 			drawn = index
 		}

@@ -86,7 +86,7 @@ names in English.
 ## Footage
 
 - Scenes are Kling 3.0 pro 5 s clips upscaled to 2K @ 60 fps (Bytedance upscale), cut at 36 fps,
-  WebP q72 `-m 6` (`QUALITY=72 pnpm frames:extract <video> <scene> 36`). 36 fps is the sweet spot:
+  WebP q80 `-m 6 -sharp_yuv` (`pnpm frames:extract <video> <scene> 36`). 36 fps is the sweet spot:
   ~10 px of scroll per frame; 48 fps added a third more weight for no visible gain.
 - The opening scene (`priority`) loads a coarse pass first and the rest when the page is idle.
 
@@ -95,7 +95,7 @@ names in English.
 - Raw Higgsfield output goes to `assets-src/` (gitignored). The approved car reference is
   `assets-src/reference/car-reference.png`.
 - `pnpm frames:extract <video> <scene> [fps]` → `public/sequences/<scene>/{desktop,mobile}/NNNN.webp`
-  (1920 / 960 wide, WebP q75) + `manifest.json`. ffmpeg here has no libwebp, so it uses `cwebp`.
+  (2560 / 960 wide, WebP q80 `-sharp_yuv`; 1920 was visibly soft on Retina) + `manifest.json`. ffmpeg here has no libwebp, so it uses `cwebp`.
 - `pnpm frames:placeholder <scene> [frames] [hue]` writes numbered test frames; those folders
   carry their own `.gitignore` and are never committed.
 

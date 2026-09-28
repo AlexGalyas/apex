@@ -4,9 +4,9 @@
   "frameCount": 179,
   "ext": "webp",
   "placeholder": false,
-  "version": "287fec1d8f",
+  "version": "b626e9a79f",
   "variants": {
-    "desktop": { "width": 1920, "height": 1070 },
+    "desktop": { "width": 2560, "height": 1428 },
     "mobile": { "width": 960, "height": 536 }
   }
 }
