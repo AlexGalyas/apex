@@ -2,14 +2,25 @@ import type { Metadata, Viewport } from 'next'
 
 import { Grain, Rain, Reveals } from '@/components/fx'
 import { SmoothScroll } from '@/components/providers/smooth-scroll'
+import { config } from '@/core/config'
 import { jetbrainsMono, unbounded } from '@/core/fonts'
 
 import './globals.css'
 
+// OpenGraph/Twitter images come from app/opengraph-image.png and app/twitter-image.png.
 export const metadata: Metadata = {
-	title: 'APEX Racing — The night belongs to us',
-	description:
-		'APEX Racing in the NOCTURNE series: night street races through Tokyo, Monaco and Dubai.'
+	metadataBase: config.siteUrl,
+	title: config.title,
+	description: config.description,
+	alternates: { canonical: '/' },
+	openGraph: {
+		type: 'website',
+		url: '/',
+		siteName: config.siteName,
+		title: config.title,
+		description: config.description
+	},
+	twitter: { card: 'summary_large_image', title: config.title, description: config.description }
 }
 
 export const viewport: Viewport = {

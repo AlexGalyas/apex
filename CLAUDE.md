@@ -82,9 +82,17 @@ names in English.
 - `pnpm frames:placeholder <scene> [frames] [hue]` writes numbered test frames; those folders
   carry their own `.gitignore` and are never committed.
 
+## Testing
+
+- Unit: Jest next to the code (`pnpm test`). E2E: Playwright in `tests/e2e` against the system Chrome
+  (`channel: 'chrome'`, no browser download), desktop + Pixel 7, including a `reducedMotion`
+  suite (`pnpm test:e2e`, builds must exist — it runs `pnpm start -p 3200`).
+- The hero title uses nested spans on purpose: GSAP folds a running CSS `translate` into its own
+  transform, so the CSS rise-in and the GSAP spread must never share an element.
+
 ## Commands
 
-`pnpm dev` · `pnpm build` · `pnpm verify` (lint, typecheck, format, tests)
+`pnpm dev` · `pnpm build` · `pnpm verify` (lint, typecheck, format, tests) · `pnpm test:e2e`
 
 The preview pane cannot spawn servers inside `~/Documents` (macOS EPERM on cwd): start the server
 from a terminal (`pnpm start -p 3100`) and attach via `.claude/launch.json`.

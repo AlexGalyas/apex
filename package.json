@@ -13,7 +13,8 @@
     "test": "jest",
     "verify": "pnpm lint && pnpm typecheck && pnpm format:check && pnpm test",
     "frames:placeholder": "node scripts/make-placeholder-frames.mjs",
-    "frames:extract": "scripts/extract-frames.sh"
+    "frames:extract": "scripts/extract-frames.sh",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -25,6 +26,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

@@ -24,7 +24,8 @@ function previousStage(wrapper: HTMLElement) {
  * both are pinned — for shots whose first frame is the previous last frame, so
  * the hand-over reads as one take.
  * `curtain`: the scene slides over the pinned previous one, which sinks back
- * and darkens.
+ * and darkens. Its feathered top edge closes as it lands, so a scene that stops
+ * at the top (the last one) doesn't stay see-through.
  */
 export function useSceneEnter(wrapperRef: RefObject<HTMLElement | null>, mode: SceneEnterMode) {
 	const reducedMotion = useReducedMotion()
@@ -65,6 +66,7 @@ export function useSceneEnter(wrapperRef: RefObject<HTMLElement | null>, mode: S
 					scrub: true
 				}
 			})
+			curtain.fromTo(wrapper, { '--feather': '30svh' }, { '--feather': '0svh' }, 0)
 			curtain.fromTo(stage, { scale: 1 }, { scale: CURTAIN_SCALE }, 0)
 			if (dim) curtain.fromTo(dim, { opacity: 0 }, { opacity: CURTAIN_DIM }, 0)
 		},

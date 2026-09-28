@@ -9,7 +9,7 @@ import { type SceneEnterMode, useSceneEnter } from '@/hooks/use-scene-enter'
 const OVERLAP: Record<SceneEnterMode, string> = {
 	continue: 'motion-safe:-mt-[120svh]',
 	curtain:
-		'motion-safe:-mt-[100svh] motion-safe:[mask-image:linear-gradient(to_bottom,transparent,black_30svh)]'
+		'motion-safe:-mt-[100svh] motion-safe:[mask-image:linear-gradient(to_bottom,transparent,black_var(--feather,30svh))]'
 }
 
 interface SceneEnterProps {
