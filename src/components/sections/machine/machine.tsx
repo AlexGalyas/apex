@@ -32,10 +32,13 @@ export function Machine() {
 				{/* The car never rises above its roofline; phones keep the bottom for spec cards. */}
 				<SceneBeats
 					beats={BEATS}
-					className="inset-x-6 top-16 md:right-auto md:left-16"
+					className="inset-x-6 top-16 md:right-auto md:left-16 md:squarish:top-8"
 					scrimClassName="top-0 h-2/5 bg-linear-to-b"
 				>
-					<h2 id="machine-title" className="font-display text-4xl font-bold md:text-6xl">
+					<h2
+						id="machine-title"
+						className="font-display text-4xl font-bold md:text-6xl md:squarish:text-4xl"
+					>
 						The Machine
 					</h2>
 				</SceneBeats>

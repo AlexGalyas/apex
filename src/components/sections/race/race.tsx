@@ -32,11 +32,6 @@ export function Race() {
 				length={400}
 			>
 				<RaceHud />
-				<div className="absolute inset-x-0 top-16 px-6 md:px-16">
-					<h2 id="race-title" className="font-display text-4xl font-bold md:text-6xl">
-						Race
-					</h2>
-				</div>
 				{/* Opposite the speedometer on desktop; on phones the gauge fills the
 				    bottom, so the copy moves up under the title. */}
 				<SceneBeats
@@ -44,6 +39,11 @@ export function Race() {
 					className="inset-x-6 top-36 md:top-auto md:right-auto md:bottom-12 md:left-16"
 					scrimClassName="top-0 h-2/5 bg-linear-to-b md:top-auto md:bottom-0 md:bg-linear-to-t"
 				/>
+				<div className="absolute inset-x-0 top-16 px-6 md:px-16">
+					<h2 id="race-title" className="font-display text-4xl font-bold md:text-6xl">
+						Race
+					</h2>
+				</div>
 			</ImageSequence>
 		</section>
 	)

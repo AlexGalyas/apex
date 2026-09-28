@@ -36,7 +36,7 @@ export function SceneBeats({ beats, className, scrimClassName, children }: Scene
 				aria-hidden
 				className={`absolute inset-x-0 from-bg/85 to-transparent ${scrimClassName}`}
 			/>
-			<div className={`absolute flex flex-col gap-4 ${className}`}>
+			<div className={`absolute flex flex-col gap-4 squarish:gap-3 ${className}`}>
 				{children}
 				<div className="grid">
 					{beats.map((beat, index) => (
@@ -52,11 +52,11 @@ export function SceneBeats({ beats, className, scrimClassName, children }: Scene
 								</span>
 							)}
 							{beat.stat && (
-								<span className="font-display text-2xl font-bold tabular-nums md:text-4xl">
+								<span className="font-display text-2xl font-bold tabular-nums md:text-4xl md:squarish:text-2xl">
 									{beat.stat}
 								</span>
 							)}
-							<p className="max-w-xs text-sm leading-relaxed text-text/85 md:text-base">
+							<p className="max-w-xs text-sm leading-relaxed text-text/85 md:text-base md:squarish:text-sm">
 								{beat.text}
 							</p>
 						</div>

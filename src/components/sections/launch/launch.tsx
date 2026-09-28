@@ -33,10 +33,13 @@ export function Launch() {
 				{/* The car stays in the middle band; the wet floor below it is free. */}
 				<SceneBeats
 					beats={BEATS}
-					className="inset-x-6 bottom-12 md:right-auto md:bottom-16 md:left-16"
+					className="inset-x-6 bottom-12 md:right-auto md:bottom-16 md:left-16 md:squarish:bottom-8"
 					scrimClassName="bottom-0 h-1/2 bg-linear-to-t"
 				>
-					<h2 id="launch-title" className="font-display text-4xl font-bold md:text-6xl">
+					<h2
+						id="launch-title"
+						className="font-display text-4xl font-bold md:text-6xl md:squarish:text-4xl"
+					>
 						Launch
 					</h2>
 				</SceneBeats>

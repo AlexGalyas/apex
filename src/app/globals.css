@@ -2,6 +2,9 @@
 @import 'lenis/dist/lenis.css';
 @import '../styles/tokens.css';
 
+/* Screens near 4:3: cover-fit makes the car fill more of the frame, leaving thin free bands. */
+@custom-variant squarish (@media (max-aspect-ratio: 3/2));
+
 @theme inline {
 	--color-bg: var(--apex-bg);
 	--color-surface: var(--apex-surface);
