@@ -3,10 +3,12 @@
 import { type RefObject, useEffect, useRef } from 'react'
 
 import { ScrollTrigger } from '@/lib/gsap'
+import { whenIdle } from '@/lib/idle'
 import { overlayOpacity } from '@/lib/scene/fades'
 import {
 	coverRect,
 	frameUrl,
+	holdProgress,
 	lerp,
 	nearestLoaded,
 	pickVariant,
@@ -20,6 +22,8 @@ import type { SequenceManifest } from '@/lib/sequence/types'
 import { useReducedMotion } from './use-reduced-motion'
 
 const MAX_PIXEL_RATIO = 2
+/** Matches preloadOrder's first pass: every 16th frame plus the ends. */
+const COARSE_STRIDE = 16
 // Scenes overlap (see scene-enter), so a wide margin would preload the next scene on page load.
 const PRELOAD_MARGIN = '50% 0px'
 
@@ -33,6 +37,8 @@ interface Options {
 	priority: boolean
 	/** Canvas scale at the start and end of the scrub, e.g. [1, 1.12] for a push-in. */
 	zoom?: readonly [number, number]
+	/** Share of the scroll at the end that holds on the last frame. */
+	hold?: number
 	onProgress?: (progress: number) => void
 }
 
@@ -44,6 +50,7 @@ export function useImageSequence({
 	overlayFromStart,
 	priority,
 	zoom,
+	hold = 0,
 	onProgress
 }: Options) {
 	const reducedMotion = useReducedMotion()
@@ -115,9 +122,8 @@ export function useImageSequence({
 			}
 		}
 
-		const order = preloadOrder(frameCount)
-		store.request(priority ? order : [0])
-
+		const order = preloadOrder(frameCount, COARSE_STRIDE)
+		let cancelIdle = () => {}
 		const proximity = new IntersectionObserver(
 			([entry]) => {
 				if (!entry.isIntersecting) return
@@ -126,11 +132,21 @@ export function useImageSequence({
 			},
 			{ rootMargin: PRELOAD_MARGIN }
 		)
-		proximity.observe(trigger)
+
+		if (priority) {
+			// The opening scene gets a coarse pass straight away (enough to scrub
+			// through) and the rest once the page has loaded, so its frames don't
+			// compete with fonts and the first paint.
+			store.request(order.slice(0, Math.ceil(frameCount / COARSE_STRIDE) + 1))
+			cancelIdle = whenIdle(() => store.request(order))
+		} else {
+			store.request([0])
+			proximity.observe(trigger)
+		}
 
 		const overlay = overlayRef.current
 		const update = (progress: number) => {
-			target = progressToFrame(progress, frameCount)
+			target = progressToFrame(holdProgress(progress, hold), frameCount)
 			if (overlay) overlay.style.opacity = String(overlayOpacity(progress, !overlayFromStart))
 			onProgressRef.current?.(progress)
 			scheduleDraw()
@@ -147,6 +163,7 @@ export function useImageSequence({
 
 		return () => {
 			scrub.kill()
+			cancelIdle()
 			proximity.disconnect()
 			resizeObserver.disconnect()
 			cancelAnimationFrame(rafId)
@@ -161,6 +178,7 @@ export function useImageSequence({
 		priority,
 		zoomFrom,
 		zoomTo,
+		hold,
 		reducedMotion
 	])
 }

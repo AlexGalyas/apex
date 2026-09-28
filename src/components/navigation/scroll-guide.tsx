@@ -21,7 +21,7 @@ export function ScrollGuide() {
 				aria-label="Sections"
 				className="fixed top-1/2 right-1.5 z-50 -translate-y-1/2 md:right-6"
 			>
-				<div className="relative flex flex-col items-end gap-2 pr-2 md:gap-4 md:pr-3">
+				<div className="relative flex flex-col items-end pr-2 md:gap-1 md:pr-3">
 					<span aria-hidden className="absolute inset-y-0 right-0 w-px bg-text/15">
 						<span
 							ref={progressRef}
@@ -38,7 +38,7 @@ export function ScrollGuide() {
 								onClick={() => jumpTo(index)}
 								aria-current={current ? 'step' : undefined}
 								aria-label={`${pad(index + 1)} ${section.label}`}
-								className="group flex items-center gap-3 py-1 focus-visible:outline-none"
+								className="group flex min-h-6 min-w-6 items-center justify-end gap-3 focus-visible:outline-none"
 							>
 								<span className="pointer-events-none font-mono text-[10px] tracking-[0.3em] text-text uppercase opacity-0 transition-opacity duration-(--apex-duration-base) group-hover:opacity-100 group-focus-visible:opacity-100 max-md:hidden">
 									{section.label}

@@ -3,8 +3,8 @@
 import type { RefObject } from 'react'
 
 import { gsap, useGSAP } from '@/lib/gsap'
-import { HOTSPOTS, hotspotAt, TURNTABLE_ASPECT, TURNTABLE_FRAMES } from '@/lib/machine/hotspots'
-import { coverRect, progressToFrame } from '@/lib/sequence/frames'
+import { HOTSPOTS, hotspotAt, TURNTABLE_ASPECT, TURNTABLE_HOLD } from '@/lib/machine/hotspots'
+import { coverRect, holdProgress } from '@/lib/sequence/frames'
 import { trackTrigger } from '@/lib/sequence/track-trigger'
 
 const COUNT_DURATION = 0.9
@@ -49,14 +49,14 @@ export function useMachineHotspots(containerRef: RefObject<HTMLElement | null>) 
 					})
 				}
 
-				const render = (progress: number) => {
-					const frame = progressToFrame(progress, TURNTABLE_FRAMES)
+				const render = (scrollProgress: number) => {
+					const progress = holdProgress(scrollProgress, TURNTABLE_HOLD)
 					const width = container.clientWidth
 					const height = container.clientHeight
 					const rect = coverRect(TURNTABLE_ASPECT * 1000, 1000, width, height)
 
 					HOTSPOTS.forEach((hotspot, index) => {
-						const { x, y, opacity } = hotspotAt(hotspot, frame)
+						const { x, y, opacity } = hotspotAt(hotspot, progress)
 						const pinX = rect.x + x * rect.width
 						const fits =
 							hotspot.side === 'right'

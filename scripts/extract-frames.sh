@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Usage: scripts/extract-frames.sh <video> <scene> [fps=30]
+# Usage: [QUALITY=75] scripts/extract-frames.sh <video> <scene> [fps=30]
 # Cuts a video into WebP frames for the scroll engine:
 #   public/sequences/<scene>/{desktop,mobile}/0001.webp … + manifest.json
 # ffmpeg decodes and scales to PNG, cwebp encodes (this ffmpeg build has no libwebp).
@@ -8,7 +8,7 @@ set -euo pipefail
 VIDEO=${1:?usage: extract-frames.sh <video> <scene> [fps]}
 SCENE=${2:?usage: extract-frames.sh <video> <scene> [fps]}
 FPS=${3:-30}
-QUALITY=75
+QUALITY=${QUALITY:-75}
 JOBS=$(sysctl -n hw.ncpu 2>/dev/null || nproc)
 
 command -v ffmpeg >/dev/null || { echo "ffmpeg not found (brew install ffmpeg)" >&2; exit 1; }
@@ -30,7 +30,7 @@ extract() {
 		"$TMP/$variant/%04d.png"
 	find "$TMP/$variant" -name '*.png' -print0 |
 		xargs -0 -P "$JOBS" -I{} sh -c \
-			'cwebp -quiet -q '"$QUALITY"' "$1" -o "'"$OUT/$variant"'/$(basename "${1%.png}").webp"' _ {}
+			'cwebp -quiet -m 6 -q '"$QUALITY"' "$1" -o "'"$OUT/$variant"'/$(basename "${1%.png}").webp"' _ {}
 }
 
 extract desktop 1920

@@ -12,6 +12,7 @@ interface SequenceScrubberProps {
 	priority: boolean
 	label: string
 	zoom?: readonly [number, number]
+	hold?: number
 	overlayFromStart?: boolean
 	onProgress?: (progress: number) => void
 	children?: ReactNode
@@ -23,6 +24,7 @@ export function SequenceScrubber({
 	priority,
 	label,
 	zoom,
+	hold,
 	overlayFromStart = false,
 	onProgress,
 	children
@@ -39,6 +41,7 @@ export function SequenceScrubber({
 		overlayFromStart,
 		priority,
 		zoom,
+		hold,
 		onProgress
 	})
 

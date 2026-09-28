@@ -1,6 +1,7 @@
 import {
 	coverRect,
 	frameUrl,
+	holdProgress,
 	lerp,
 	nearestLoaded,
 	pickVariant,
@@ -124,5 +125,17 @@ describe('lerp', () => {
 		expect(lerp(1, 1.12, 0)).toBe(1)
 		expect(lerp(1, 1.12, 1)).toBeCloseTo(1.12)
 		expect(lerp(0, 10, 0.25)).toBe(2.5)
+	})
+})
+
+describe('holdProgress', () => {
+	it('passes progress through without a hold', () => {
+		expect(holdProgress(0.5, 0)).toBe(0.5)
+	})
+
+	it('reaches the last frame early and stays there', () => {
+		expect(holdProgress(0.35, 0.3)).toBeCloseTo(0.5)
+		expect(holdProgress(0.7, 0.3)).toBeCloseTo(1)
+		expect(holdProgress(0.9, 0.3)).toBe(1)
 	})
 })

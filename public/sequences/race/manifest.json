@@ -1,12 +1,12 @@
 {
   "scene": "race",
-  "fps": 24,
-  "frameCount": 121,
+  "fps": 36,
+  "frameCount": 179,
   "ext": "webp",
   "placeholder": false,
-  "version": "f8fb82153f",
+  "version": "733550b970",
   "variants": {
-    "desktop": { "width": 1920, "height": 1072 },
+    "desktop": { "width": 1920, "height": 1070 },
     "mobile": { "width": 960, "height": 536 }
   }
 }

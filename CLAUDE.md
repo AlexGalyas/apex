@@ -52,8 +52,9 @@ names in English.
 
 - `lib/sequence/track-trigger.ts` builds a ScrollTrigger over the enclosing `[data-sequence-track]`,
   so an overlay reads the same progress as the canvas.
-- Hotspots (`lib/machine/hotspots.ts`) were measured on the current turntable video (frame numbers
-  and source-frame fractions). Re-generating that video means re-measuring them.
+- Hotspots (`lib/machine/hotspots.ts`) are measured on the current turntable video in footage
+  progress (0..1) and source-frame fractions. The machine scene holds its last frame for the final
+  30% (`hold`, same constant in the hook). Re-generating that video means re-measuring them.
 - Race HUD speed comes from scroll velocity (`lib/race/gearbox.ts`), ticking on GSAP's ticker only
   while the race track is active.
 - Tailwind v4 `scale-*` / `translate-*` classes set the separate `scale` / `translate` properties —
@@ -81,6 +82,13 @@ names in English.
 - Finish is a static image (`src/assets/finish/`) plus a signup form — no sequence.
 - There is no backend: `lib/signup/submit-signup.ts` keeps spots in `localStorage` and is the only
   place to swap for a real POST. Race date and free-spot count live in `lib/race/next-race.ts`.
+
+## Footage
+
+- Scenes are Kling 3.0 pro 5 s clips upscaled to 2K @ 60 fps (Bytedance upscale), cut at 36 fps,
+  WebP q72 `-m 6` (`QUALITY=72 pnpm frames:extract <video> <scene> 36`). 36 fps is the sweet spot:
+  ~10 px of scroll per frame; 48 fps added a third more weight for no visible gain.
+- The opening scene (`priority`) loads a coarse pass first and the rest when the page is idle.
 
 ## Assets
 

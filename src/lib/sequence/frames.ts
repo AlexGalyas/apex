@@ -85,3 +85,13 @@ export function scaleRect(rect: Rect, boxWidth: number, boxHeight: number, scale
 export function lerp(from: number, to: number, t: number): number {
 	return from + (to - from) * t
 }
+
+/**
+ * Maps scroll progress to footage progress when the last frame should hold
+ * for the final `hold` share of the scroll (e.g. while the next scene slides
+ * over it).
+ */
+export function holdProgress(progress: number, hold: number): number {
+	if (hold <= 0) return progress
+	return Math.min(1, progress / (1 - hold))
+}

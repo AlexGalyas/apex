@@ -1,12 +1,12 @@
 {
   "scene": "garage",
-  "fps": 24,
-  "frameCount": 121,
+  "fps": 36,
+  "frameCount": 179,
   "ext": "webp",
   "placeholder": false,
-  "version": "5f247e6dca",
+  "version": "d11c792510",
   "variants": {
-    "desktop": { "width": 1920, "height": 1072 },
+    "desktop": { "width": 1920, "height": 1070 },
     "mobile": { "width": 960, "height": 536 }
   }
 }

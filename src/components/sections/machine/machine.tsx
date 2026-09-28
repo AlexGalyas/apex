@@ -1,4 +1,5 @@
 import { ImageSequence } from '@/components/sequence'
+import { TURNTABLE_HOLD } from '@/lib/machine/hotspots'
 
 import { MachineHotspots } from './machine-hotspots'
 
@@ -7,8 +8,9 @@ export function Machine() {
 		<section id="machine" data-rain="0.45" aria-labelledby="machine-title">
 			<ImageSequence
 				scene="turntable"
-				label="The car rotates a full 360 degrees"
+				label="The car rolls out, turns and stops side-on, showing its profile"
 				length={400}
+				hold={TURNTABLE_HOLD}
 			>
 				<MachineHotspots />
 				<div className="absolute inset-x-0 top-16 px-6 md:px-16">

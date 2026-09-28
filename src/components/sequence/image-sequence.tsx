@@ -13,6 +13,8 @@ interface ImageSequenceProps {
 	priority?: boolean
 	/** Canvas scale at the start and end of the scrub, e.g. [1, 1.12] for a push-in. */
 	zoom?: readonly [number, number]
+	/** Share of the scroll at the end that holds on the last frame. */
+	hold?: number
 	/** Overlay copy is visible from the first frame instead of fading in (the opening scene). */
 	overlayFromStart?: boolean
 	children?: ReactNode
@@ -24,6 +26,7 @@ export async function ImageSequence({
 	length = 300,
 	priority = false,
 	zoom,
+	hold,
 	overlayFromStart,
 	children
 }: ImageSequenceProps) {
@@ -48,6 +51,7 @@ export async function ImageSequence({
 			priority={priority}
 			label={label}
 			zoom={zoom}
+			hold={hold}
 			overlayFromStart={overlayFromStart}
 		>
 			{children}

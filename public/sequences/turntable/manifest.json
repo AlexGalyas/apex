@@ -1,12 +1,12 @@
 {
   "scene": "turntable",
-  "fps": 24,
-  "frameCount": 121,
+  "fps": 36,
+  "frameCount": 179,
   "ext": "webp",
   "placeholder": false,
-  "version": "c8edae6876",
+  "version": "52dd876c00",
   "variants": {
-    "desktop": { "width": 1920, "height": 1072 },
+    "desktop": { "width": 1920, "height": 1070 },
     "mobile": { "width": 960, "height": 536 }
   }
 }

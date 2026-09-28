@@ -1,12 +1,12 @@
 {
   "scene": "launch",
-  "fps": 24,
-  "frameCount": 121,
+  "fps": 36,
+  "frameCount": 179,
   "ext": "webp",
   "placeholder": false,
-  "version": "9e95f11340",
+  "version": "287fec1d8f",
   "variants": {
-    "desktop": { "width": 1920, "height": 1072 },
+    "desktop": { "width": 1920, "height": 1070 },
     "mobile": { "width": 960, "height": 536 }
   }
 }
