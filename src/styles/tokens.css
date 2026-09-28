@@ -1,0 +1,16 @@
+:root {
+	--apex-bg: #07080a;
+	--apex-surface: #0e1014;
+	--apex-cyan: #00e5ff;
+	--apex-magenta: #ff2e88;
+	--apex-gold: #ffb800;
+	--apex-text: #f2f4f7;
+	--apex-muted: #8a919e;
+
+	/* Sections re-point this per city (Tokyo → magenta, Monaco → cyan, Dubai → gold). */
+	--apex-accent: var(--apex-cyan);
+
+	--apex-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--apex-duration-fast: 150ms;
+	--apex-duration-base: 300ms;
+}

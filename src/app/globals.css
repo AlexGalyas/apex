@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+@import 'lenis/dist/lenis.css';
+@import '../styles/tokens.css';
+
+@theme inline {
+	--color-bg: var(--apex-bg);
+	--color-surface: var(--apex-surface);
+	--color-cyan: var(--apex-cyan);
+	--color-magenta: var(--apex-magenta);
+	--color-gold: var(--apex-gold);
+	--color-text: var(--apex-text);
+	--color-muted: var(--apex-muted);
+	--color-accent: var(--apex-accent);
+
+	--font-display: var(--font-unbounded);
+	--font-mono: var(--font-jetbrains-mono);
+
+	--ease-apex: var(--apex-ease-out);
+}
+
+html {
+	background: var(--apex-bg);
+	color: var(--apex-text);
+	color-scheme: dark;
+}
+
+body {
+	font-family: var(--font-display), system-ui, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+	background: var(--apex-accent);
+	color: var(--apex-bg);
+}
