@@ -17,15 +17,14 @@ import {
 	scaleRect
 } from '@/lib/sequence/frames'
 import { FrameStore } from '@/lib/sequence/frame-store'
-import type { SequenceManifest } from '@/lib/sequence/types'
+import { preloader } from '@/lib/sequence/preloader'
+import type { SequenceManifest, SequenceVariantName } from '@/lib/sequence/types'
 
 import { useReducedMotion } from './use-reduced-motion'
 
 const MAX_PIXEL_RATIO = 2
 /** Matches preloadOrder's first pass: every 16th frame plus the ends. */
 const COARSE_STRIDE = 16
-// Scenes overlap (see scene-enter), so a wide margin would preload the next scene on page load.
-const PRELOAD_MARGIN = '50% 0px'
 
 interface Options {
 	manifest: SequenceManifest
@@ -69,20 +68,31 @@ export function useImageSequence({
 
 		const { scene, frameCount, ext, version } = manifest
 		const last = frameCount - 1
-		const variant = pickVariant(window.innerWidth)
-		const urls = Array.from({ length: frameCount }, (_, i) =>
-			frameUrl(scene, variant, i, ext, version)
-		)
+		const urls = (variant: SequenceVariantName) =>
+			Array.from({ length: frameCount }, (_, i) => frameUrl(scene, variant, i, ext, version))
 
 		let target = reducedMotion ? last : 0
-		let drawn = -1
+		let drawn: HTMLImageElement | null = null
 		let rafId = 0
+
+		// Phones get the light frames only; wider screens scrub on them first and
+		// swap in full-resolution frames around the playhead as they arrive.
+		const sharpVariant = pickVariant(window.innerWidth)
+		const draft = new FrameStore(urls('mobile'), { onFrame: () => scheduleDraw() })
+		const sharp =
+			sharpVariant === 'mobile'
+				? null
+				: new FrameStore(urls(sharpVariant), { onFrame: () => scheduleDraw() })
+		const top = sharp ?? draft
+
+		const isLoaded = (i: number) => draft.isLoaded(i) || !!sharp?.isLoaded(i)
+		const frameAt = (i: number) => (sharp?.isLoaded(i) ? sharp.get(i) : draft.get(i))
 
 		const draw = () => {
 			rafId = 0
-			const index = nearestLoaded(target, frameCount, store.isLoaded)
-			const image = index >= 0 ? store.get(index) : null
-			if (!image || index === drawn) return
+			const index = nearestLoaded(target, frameCount, isLoaded)
+			const image = index >= 0 ? frameAt(index) : null
+			if (!image || image === drawn) return
 
 			const cover = coverRect(
 				image.naturalWidth,
@@ -95,7 +105,7 @@ export function useImageSequence({
 			// Resizing a canvas resets its context state, so this is set on every draw.
 			context.imageSmoothingQuality = 'high'
 			context.drawImage(image, rect.x, rect.y, rect.width, rect.height)
-			drawn = index
+			drawn = image
 		}
 
 		const scheduleDraw = () => {
@@ -103,48 +113,40 @@ export function useImageSequence({
 			rafId = requestAnimationFrame(draw)
 		}
 
-		const store = new FrameStore(urls, { onFrame: scheduleDraw })
-
 		const resize = () => {
 			const ratio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO)
 			canvas.width = Math.round(canvas.clientWidth * ratio)
 			canvas.height = Math.round(canvas.clientHeight * ratio)
-			drawn = -1
+			drawn = null
 			scheduleDraw()
 		}
 		const resizeObserver = new ResizeObserver(resize)
 		resizeObserver.observe(canvas)
 
+		const dispose = () => {
+			resizeObserver.disconnect()
+			cancelAnimationFrame(rafId)
+			draft.dispose()
+			sharp?.dispose()
+		}
+
 		if (reducedMotion) {
-			store.request([last])
-			return () => {
-				resizeObserver.disconnect()
-				cancelAnimationFrame(rafId)
-				store.dispose()
-			}
+			preloader.urgent(top, [last])
+			return dispose
 		}
 
 		const order = preloadOrder(frameCount, COARSE_STRIDE)
-		let cancelIdle = () => {}
-		const proximity = new IntersectionObserver(
-			([entry]) => {
-				if (!entry.isIntersecting) return
-				store.request(order)
-				proximity.disconnect()
-			},
-			{ rootMargin: PRELOAD_MARGIN }
-		)
-
 		if (priority) {
-			// The opening scene gets a coarse pass straight away (enough to scrub
-			// through) and the rest once the page has loaded, so its frames don't
-			// compete with fonts and the first paint.
-			store.request(order.slice(0, Math.ceil(frameCount / COARSE_STRIDE) + 1))
-			cancelIdle = whenIdle(() => store.request(order))
+			// The opening frame at full resolution plus a coarse pass of drafts, enough
+			// to scrub through; everything else waits until the page has loaded.
+			preloader.urgent(top, [0])
+			preloader.urgent(draft, order.slice(0, Math.ceil(frameCount / COARSE_STRIDE) + 1))
 		} else {
-			store.request([0])
-			proximity.observe(trigger)
+			preloader.urgent(draft, [0])
 		}
+		const track = { element: trigger, draft, draftOrder: order, sharp, target: () => target }
+		const unregister = preloader.register(track)
+		const cancelIdle = whenIdle(() => preloader.start())
 
 		const overlay = overlayRef.current
 		const update = (progress: number) => {
@@ -158,18 +160,18 @@ export function useImageSequence({
 			trigger,
 			start: 'top top',
 			end: 'bottom bottom',
-			onUpdate: (self) => update(self.progress)
+			onUpdate: (self) => update(self.progress),
+			onToggle: (self) => preloader.setActive(track, self.isActive)
 		})
+		preloader.setActive(track, scrub.isActive)
 		// A reload mid-page restores scroll without an update event — sync to it once.
 		update(scrub.progress)
 
 		return () => {
 			scrub.kill()
 			cancelIdle()
-			proximity.disconnect()
-			resizeObserver.disconnect()
-			cancelAnimationFrame(rafId)
-			store.dispose()
+			unregister()
+			dispose()
 		}
 	}, [
 		manifest,

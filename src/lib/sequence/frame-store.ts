@@ -1,9 +1,6 @@
-import { type LoadQueue, sharedLoadQueue } from './load-queue'
-
 type LoadImage = (url: string) => Promise<HTMLImageElement>
 
 interface FrameStoreOptions {
-	queue?: LoadQueue
 	loadImage?: LoadImage
 	onFrame?: (index: number) => void
 }
@@ -34,31 +31,35 @@ async function decodeImage(url: string): Promise<HTMLImageElement> {
 	return image
 }
 
+/**
+ * The frames of one sequence at one resolution. It only holds and fetches;
+ * what to fetch next is the preloader's call.
+ */
 export class FrameStore {
 	private readonly frames: (HTMLImageElement | null)[]
 	private readonly requested = new Set<number>()
-	private readonly controller = new AbortController()
-	private readonly queue: LoadQueue
 	private readonly loadImage: LoadImage
 	private readonly onFrame?: (index: number) => void
+	private disposed = false
 
 	constructor(
 		private readonly urls: string[],
 		options: FrameStoreOptions = {}
 	) {
 		this.frames = urls.map(() => null)
-		this.queue = options.queue ?? sharedLoadQueue
 		this.loadImage = options.loadImage ?? decodeImage
 		this.onFrame = options.onFrame
 	}
 
-	request(indices: number[]) {
-		for (const index of indices) {
-			if (this.requested.has(index)) continue
-			this.requested.add(index)
-			this.queue.enqueue(() => this.load(index), this.controller.signal)
-		}
+	get size() {
+		return this.urls.length
 	}
+
+	get isDisposed() {
+		return this.disposed
+	}
+
+	isRequested = (index: number) => this.requested.has(index)
 
 	isLoaded = (index: number) => this.frames[index] !== null
 
@@ -67,13 +68,16 @@ export class FrameStore {
 	}
 
 	dispose() {
-		this.controller.abort()
+		this.disposed = true
 	}
 
-	private async load(index: number) {
+	/** Marks the frame as requested straight away, so it is never fetched twice. */
+	async fetch(index: number) {
+		if (this.disposed || this.requested.has(index)) return
+		this.requested.add(index)
 		try {
 			const image = await this.loadImage(this.urls[index])
-			if (this.controller.signal.aborted) return
+			if (this.disposed) return
 			this.frames[index] = image
 			this.onFrame?.(index)
 		} catch (error) {

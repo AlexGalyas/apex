@@ -19,8 +19,14 @@ names in English.
 
 - `ImageSequence` (server) reads `public/sequences/<scene>/manifest.json` at build time and renders
   `SequenceScrubber` (client), a sticky canvas scrubbed by ScrollTrigger (`use-image-sequence`).
-- Frames load through one shared queue (6 at a time): the first frame on mount, the full set
-  coarse-to-fine when the section is within 1.5 viewports; `priority` loads everything on mount.
+- Two tiers per scene: the 960 `mobile` frames are drafts (the whole scene scrubs on them within
+  a couple of seconds), the 2560 `desktop` frames replace them around the playhead. Phones load
+  drafts only. The canvas draws the best loaded frame nearest the target.
+- One page-wide `preloader` (`lib/sequence/preloader.ts`, 10 at a time) picks each next frame by
+  priority relative to the current scene: its drafts → its sharp frames near the playhead → the
+  next scene's drafts → the rest → the previous scene's drafts → the next scene's sharp frames.
+  Scenes further away are left alone. Before the page is idle only urgent frames load (the
+  opening frame, a coarse draft pass of the opening scene, frame 0 of every other scene).
 - Frames are served `immutable` for a year, so every manifest carries a `version` (hash of video +
   fps + quality) appended as `?v=` — never serve changed frames under an unchanged URL.
 - Lenis runs on GSAP's ticker (`use-lenis`); do not add a second rAF loop for scrolling.

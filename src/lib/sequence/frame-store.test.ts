@@ -1,7 +1,4 @@
 import { FrameStore } from './frame-store'
-import { createLoadQueue } from './load-queue'
-
-const flush = () => new Promise((r) => setTimeout(r, 0))
 
 function fakeImage(url: string) {
 	return { url } as unknown as HTMLImageElement
@@ -10,16 +7,14 @@ function fakeImage(url: string) {
 describe('FrameStore', () => {
 	const urls = ['a.webp', 'b.webp', 'c.webp']
 
-	it('loads requested frames and reports each one', async () => {
+	it('loads a fetched frame and reports it', async () => {
 		const loaded: number[] = []
 		const store = new FrameStore(urls, {
-			queue: createLoadQueue(4),
 			loadImage: async (url) => fakeImage(url),
 			onFrame: (i) => loaded.push(i)
 		})
 
-		store.request([2, 0])
-		await flush()
+		await Promise.all([store.fetch(2), store.fetch(0)])
 
 		expect(loaded).toEqual([2, 0])
 		expect(store.isLoaded(0)).toBe(true)
@@ -27,30 +22,28 @@ describe('FrameStore', () => {
 		expect(store.get(2)).toEqual({ url: 'c.webp' })
 	})
 
-	it('requests each frame only once', async () => {
+	it('marks a frame requested as soon as it is fetched, and fetches it once', async () => {
 		const loadImage = jest.fn(async (url: string) => fakeImage(url))
-		const store = new FrameStore(urls, { queue: createLoadQueue(4), loadImage })
+		const store = new FrameStore(urls, { loadImage })
 
-		store.request([0, 1])
-		store.request([1, 2, 0])
-		await flush()
+		const pending = store.fetch(1)
+		expect(store.isRequested(1)).toBe(true)
+		expect(store.isLoaded(1)).toBe(false)
+		await Promise.all([pending, store.fetch(1)])
 
-		expect(loadImage).toHaveBeenCalledTimes(3)
+		expect(loadImage).toHaveBeenCalledTimes(1)
 	})
 
 	it('drops a failed frame without breaking the rest', async () => {
 		const log = jest.spyOn(console, 'error').mockImplementation(() => undefined)
 		const store = new FrameStore(urls, {
-			queue: createLoadQueue(1),
 			loadImage: async (url) => {
 				if (url === 'b.webp') throw new Error('404')
 				return fakeImage(url)
 			}
 		})
 
-		store.request([0, 1, 2])
-		await flush()
-		await flush()
+		await Promise.all([store.fetch(1), store.fetch(2)])
 
 		expect(store.isLoaded(1)).toBe(false)
 		expect(store.isLoaded(2)).toBe(true)
@@ -58,15 +51,16 @@ describe('FrameStore', () => {
 		log.mockRestore()
 	})
 
-	it('stops loading after dispose', async () => {
+	it('keeps nothing after dispose', async () => {
 		const loadImage = jest.fn(async (url: string) => fakeImage(url))
-		const store = new FrameStore(urls, { queue: createLoadQueue(1), loadImage })
+		const store = new FrameStore(urls, { loadImage })
 
-		store.request([0, 1, 2])
+		const pending = store.fetch(0)
 		store.dispose()
-		await flush()
+		await pending
+		await store.fetch(1)
 
-		expect(loadImage).toHaveBeenCalledTimes(1)
 		expect(store.isLoaded(0)).toBe(false)
+		expect(loadImage).toHaveBeenCalledTimes(1)
 	})
 })
