@@ -13,7 +13,6 @@ export interface SpeedReading {
 
 /**
  * Turns successive scroll positions into a car's speed, gear and revs.
- * Shared by the race HUD and the engine sound so they always agree.
  */
 export function createScrollSpeed(startTime: number, startY: number) {
 	let lastTime = startTime
