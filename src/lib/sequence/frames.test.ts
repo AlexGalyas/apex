@@ -10,9 +10,13 @@ import {
 } from './frames'
 
 describe('frameUrl', () => {
-	it('builds a 1-based, zero-padded path per variant', () => {
-		expect(frameUrl('garage', 'desktop', 0, 'webp')).toBe('/sequences/garage/desktop/0001.webp')
-		expect(frameUrl('race', 'mobile', 149, 'webp')).toBe('/sequences/race/mobile/0150.webp')
+	it('builds a 1-based, zero-padded, versioned path per variant', () => {
+		expect(frameUrl('garage', 'desktop', 0, 'webp', 'a1b2')).toBe(
+			'/sequences/garage/desktop/0001.webp?v=a1b2'
+		)
+		expect(frameUrl('race', 'mobile', 149, 'webp', 'c3d4')).toBe(
+			'/sequences/race/mobile/0150.webp?v=c3d4'
+		)
 	})
 })
 

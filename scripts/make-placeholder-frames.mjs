@@ -70,6 +70,7 @@ const manifest = {
 	frameCount,
 	ext: 'webp',
 	placeholder: true,
+	version: `placeholder-${Date.now().toString(36)}`,
 	variants: Object.fromEntries(
 		Object.entries(VARIANTS).map(([name, [width, height]]) => [name, { width, height }])
 	)

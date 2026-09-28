@@ -53,10 +53,12 @@ export function useImageSequence({
 		const context = canvas?.getContext('2d', { alpha: false })
 		if (!canvas || !trigger || !context) return
 
-		const { scene, frameCount, ext } = manifest
+		const { scene, frameCount, ext, version } = manifest
 		const last = frameCount - 1
 		const variant = pickVariant(window.innerWidth)
-		const urls = Array.from({ length: frameCount }, (_, i) => frameUrl(scene, variant, i, ext))
+		const urls = Array.from({ length: frameCount }, (_, i) =>
+			frameUrl(scene, variant, i, ext, version)
+		)
 
 		let target = reducedMotion ? last : 0
 		let drawn = -1

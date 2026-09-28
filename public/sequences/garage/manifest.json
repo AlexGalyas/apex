@@ -4,6 +4,7 @@
   "frameCount": 121,
   "ext": "webp",
   "placeholder": false,
+  "version": "5f247e6dca",
   "variants": {
     "desktop": { "width": 1920, "height": 1072 },
     "mobile": { "width": 960, "height": 536 }

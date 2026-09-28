@@ -21,6 +21,8 @@ names in English.
   `SequenceScrubber` (client), a sticky canvas scrubbed by ScrollTrigger (`use-image-sequence`).
 - Frames load through one shared queue (6 at a time): the first frame on mount, the full set
   coarse-to-fine when the section is within 1.5 viewports; `priority` loads everything on mount.
+- Frames are served `immutable` for a year, so every manifest carries a `version` (hash of video +
+  fps + quality) appended as `?v=` — never serve changed frames under an unchanged URL.
 - Lenis runs on GSAP's ticker (`use-lenis`); do not add a second rAF loop for scrolling.
 
 ## Assets

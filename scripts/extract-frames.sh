@@ -16,6 +16,7 @@ command -v cwebp >/dev/null || { echo "cwebp not found (brew install webp)" >&2;
 [[ -f "$VIDEO" ]] || { echo "no such video: $VIDEO" >&2; exit 1; }
 
 OUT="public/sequences/$SCENE"
+VERSION=$({ shasum "$VIDEO"; echo "$FPS $QUALITY"; } | shasum | cut -c1-10)
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
@@ -47,6 +48,7 @@ cat >"$OUT/manifest.json" <<JSON
   "frameCount": $COUNT,
   "ext": "webp",
   "placeholder": false,
+  "version": "$VERSION",
   "variants": {
     "desktop": { "width": $DW, "height": $DH },
     "mobile": { "width": $MW, "height": $MH }

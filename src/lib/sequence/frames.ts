@@ -6,10 +6,11 @@ export function frameUrl(
 	scene: string,
 	variant: SequenceVariantName,
 	index: number,
-	ext: string
+	ext: string,
+	version: string
 ): string {
 	const file = String(index + 1).padStart(4, '0')
-	return `/sequences/${scene}/${variant}/${file}.${ext}`
+	return `/sequences/${scene}/${variant}/${file}.${ext}?v=${version}`
 }
 
 export function progressToFrame(progress: number, frameCount: number): number {

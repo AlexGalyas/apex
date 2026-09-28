@@ -11,6 +11,8 @@ export interface SequenceManifest {
 	frameCount: number
 	ext: 'webp'
 	placeholder: boolean
+	/** Changes on every extraction; frames are cached as immutable, so URLs must change too. */
+	version: string
 	variants: Record<SequenceVariantName, SequenceVariant>
 }
 
