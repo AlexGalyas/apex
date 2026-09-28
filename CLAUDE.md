@@ -25,6 +25,12 @@ names in English.
   fps + quality) appended as `?v=` — never serve changed frames under an unchanged URL.
 - Lenis runs on GSAP's ticker (`use-lenis`); do not add a second rAF loop for scrolling.
 
+## Finish / signup
+
+- Finish is a static image (`src/assets/finish/`) plus a signup form — no sequence.
+- There is no backend: `lib/signup/submit-signup.ts` keeps spots in `localStorage` and is the only
+  place to swap for a real POST. Race date and free-spot count live in `lib/race/next-race.ts`.
+
 ## Assets
 
 - Raw Higgsfield output goes to `assets-src/` (gitignored). The approved car reference is
