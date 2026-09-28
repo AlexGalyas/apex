@@ -7,6 +7,7 @@ export function Hero() {
 				scene="garage"
 				label="Lights switch on one by one over the APEX car in a dark garage"
 				length={300}
+				zoom={[1, 1.12]}
 				priority
 			>
 				<div className="absolute inset-0 flex flex-col items-center justify-center gap-4">

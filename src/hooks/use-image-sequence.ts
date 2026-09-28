@@ -6,10 +6,12 @@ import { ScrollTrigger } from '@/lib/gsap'
 import {
 	coverRect,
 	frameUrl,
+	lerp,
 	nearestLoaded,
 	pickVariant,
 	preloadOrder,
-	progressToFrame
+	progressToFrame,
+	scaleRect
 } from '@/lib/sequence/frames'
 import { FrameStore } from '@/lib/sequence/frame-store'
 import type { SequenceManifest } from '@/lib/sequence/types'
@@ -24,6 +26,8 @@ interface Options {
 	canvasRef: RefObject<HTMLCanvasElement | null>
 	triggerRef: RefObject<HTMLElement | null>
 	priority: boolean
+	/** Canvas scale at the start and end of the scrub, e.g. [1, 1.12] for a push-in. */
+	zoom?: readonly [number, number]
 	onProgress?: (progress: number) => void
 }
 
@@ -32,9 +36,11 @@ export function useImageSequence({
 	canvasRef,
 	triggerRef,
 	priority,
+	zoom,
 	onProgress
 }: Options) {
 	const reducedMotion = useReducedMotion()
+	const [zoomFrom, zoomTo] = zoom ?? [1, 1]
 	const onProgressRef = useRef(onProgress)
 
 	useEffect(() => {
@@ -62,12 +68,14 @@ export function useImageSequence({
 			const image = index >= 0 ? store.get(index) : null
 			if (!image || index === drawn) return
 
-			const rect = coverRect(
+			const cover = coverRect(
 				image.naturalWidth,
 				image.naturalHeight,
 				canvas.width,
 				canvas.height
 			)
+			const scale = lerp(zoomFrom, zoomTo, index / Math.max(1, last))
+			const rect = scaleRect(cover, canvas.width, canvas.height, scale)
 			context.drawImage(image, rect.x, rect.y, rect.width, rect.height)
 			drawn = index
 		}
@@ -129,5 +137,5 @@ export function useImageSequence({
 			cancelAnimationFrame(rafId)
 			store.dispose()
 		}
-	}, [manifest, canvasRef, triggerRef, priority, reducedMotion])
+	}, [manifest, canvasRef, triggerRef, priority, zoomFrom, zoomTo, reducedMotion])
 }

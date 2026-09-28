@@ -11,6 +11,8 @@ interface ImageSequenceProps {
 	length?: number
 	/** Preload every frame on mount instead of when the section comes near. */
 	priority?: boolean
+	/** Canvas scale at the start and end of the scrub, e.g. [1, 1.12] for a push-in. */
+	zoom?: readonly [number, number]
 	children?: ReactNode
 }
 
@@ -19,6 +21,7 @@ export async function ImageSequence({
 	label,
 	length = 300,
 	priority = false,
+	zoom,
 	children
 }: ImageSequenceProps) {
 	const manifest = await getManifest(scene)
@@ -36,7 +39,13 @@ export async function ImageSequence({
 	}
 
 	return (
-		<SequenceScrubber manifest={manifest} length={length} priority={priority} label={label}>
+		<SequenceScrubber
+			manifest={manifest}
+			length={length}
+			priority={priority}
+			label={label}
+			zoom={zoom}
+		>
 			{children}
 		</SequenceScrubber>
 	)

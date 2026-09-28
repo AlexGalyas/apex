@@ -68,3 +68,19 @@ export function pickVariant(viewportWidth: number): SequenceVariantName {
 	if (viewportWidth <= MOBILE_MAX_WIDTH) return 'mobile'
 	return 'desktop'
 }
+
+/** Scales a drawn rect about the centre of the box — a push-in without re-rendering footage. */
+export function scaleRect(rect: Rect, boxWidth: number, boxHeight: number, scale: number): Rect {
+	const cx = boxWidth / 2
+	const cy = boxHeight / 2
+	return {
+		x: cx - (cx - rect.x) * scale,
+		y: cy - (cy - rect.y) * scale,
+		width: rect.width * scale,
+		height: rect.height * scale
+	}
+}
+
+export function lerp(from: number, to: number, t: number): number {
+	return from + (to - from) * t
+}

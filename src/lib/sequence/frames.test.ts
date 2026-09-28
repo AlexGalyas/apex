@@ -1,10 +1,12 @@
 import {
 	coverRect,
 	frameUrl,
+	lerp,
 	nearestLoaded,
 	pickVariant,
 	preloadOrder,
-	progressToFrame
+	progressToFrame,
+	scaleRect
 } from './frames'
 
 describe('frameUrl', () => {
@@ -94,5 +96,29 @@ describe('pickVariant', () => {
 		expect(pickVariant(390)).toBe('mobile')
 		expect(pickVariant(767)).toBe('mobile')
 		expect(pickVariant(768)).toBe('desktop')
+	})
+})
+
+describe('scaleRect', () => {
+	it('keeps the rect when the scale is 1', () => {
+		const rect = { x: 0, y: -62.5, width: 2000, height: 1125 }
+		expect(scaleRect(rect, 2000, 1000, 1)).toEqual(rect)
+	})
+
+	it('grows about the centre of the box', () => {
+		expect(scaleRect({ x: 0, y: 0, width: 100, height: 50 }, 100, 50, 1.2)).toEqual({
+			x: -10,
+			y: -5,
+			width: 120,
+			height: 60
+		})
+	})
+})
+
+describe('lerp', () => {
+	it('interpolates between the ends', () => {
+		expect(lerp(1, 1.12, 0)).toBe(1)
+		expect(lerp(1, 1.12, 1)).toBeCloseTo(1.12)
+		expect(lerp(0, 10, 0.25)).toBe(2.5)
 	})
 })

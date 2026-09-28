@@ -10,6 +10,7 @@ interface SequenceScrubberProps {
 	length: number
 	priority: boolean
 	label: string
+	zoom?: readonly [number, number]
 	onProgress?: (progress: number) => void
 	children?: ReactNode
 }
@@ -19,13 +20,14 @@ export function SequenceScrubber({
 	length,
 	priority,
 	label,
+	zoom,
 	onProgress,
 	children
 }: SequenceScrubberProps) {
 	const triggerRef = useRef<HTMLDivElement>(null)
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 
-	useImageSequence({ manifest, canvasRef, triggerRef, priority, onProgress })
+	useImageSequence({ manifest, canvasRef, triggerRef, priority, zoom, onProgress })
 
 	return (
 		<div
